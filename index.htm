@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TELEPROMPT - Cards Interativos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            color: #343a40;
+        }
+
+        h1 {
+            color: #0056b3;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 25px;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .card {
+            width: 130px;
+            height: 130px;
+            background-color: #007bff;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto; /* Center cards within their grid cell */
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Geometric Shapes */
+        .shape {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff; /* Cor da forma */
+        }
+
+        .circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+        }
+
+        .square {
+            width: 90px;
+            height: 90px;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 90px solid #ffffff;
+        }
+
+        .diamond {
+            width: 90px;
+            height: 90px;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .pentagon {
+            width: 90px;
+            height: 86px; /* Ajuste para proporção de um pentágono */
+            background-color: #ffffff;
+            position: relative;
+        }
+        .pentagon::before {
+            content: "";
+            position: absolute;
+            top: -33px; /* Ajuste para o triângulo superior */
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 33px solid #ffffff;
+        }
+
+        .hexagon {
+            width: 90px;
+            height: 52px; /* Ajuste para proporção de um hexágono */
+            background: #ffffff;
+            position: relative;
+        }
+        .hexagon::before {
+            content: "";
+            position: absolute;
+            top: -26px; /* Ajuste para o triângulo superior */
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 26px solid #ffffff;
+        }
+        .hexagon::after {
+            content: "";
+            position: absolute;
+            bottom: -26px; /* Ajuste para o triângulo inferior */
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-top: 26px solid #ffffff;
+        }
+
+        .star {
+            width: 0;
+            height: 0;
+            border-right: 50px solid transparent;
+            border-left: 50px solid transparent;
+            border-bottom: 35px solid #ffffff;
+            position: relative;
+            top: -15px; /* Ajuste para centralizar visualmente */
+        }
+        .star::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-right: 50px solid transparent;
+            border-left: 50px solid transparent;
+            border-top: 35px solid #ffffff;
+            position: absolute;
+            top: 20px; /* Ajuste para criar a forma de estrela */
+            left: -50px;
+        }
+
+        .cross {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            background-color: #ffffff;
+        }
+        /* Para o "cross", o fundo do card deve ser visível através dele para o efeito */
+        .cross::before, .cross::after {
+            content: '';
+            position: absolute;
+            background-color: #007bff; /* Cor do fundo do card para "recortar" */
+        }
+        .cross::before {
+            width: 100%;
+            height: 30px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        .cross::after {
+            width: 30px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .command-display {
+            background-color: #e9ecef;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.6em;
+            color: #495057;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            margin-top: 20px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .back-button {
+            margin-top: 30px;
+            padding: 14px 30px;
+            font-size: 1.2em;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+                margin-bottom: 20px;
+            }
+            .container {
+                padding: 15px;
+            }
+            .card-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 15px;
+            }
+            .card {
+                width: 100px;
+                height: 100px;
+                border-radius: 10px;
+            }
+            /* Adjust shapes for smaller cards */
+            .shape {
+                transform: translate(-50%, -50%) scale(0.7); /* Scale down shapes */
+            }
+            .circle, .square, .diamond {
+                width: 70px;
+                height: 70px;
+            }
+            .triangle {
+                border-left-width: 35px;
+                border-right-width: 35px;
+                border-bottom-width: 70px;
+            }
+            .pentagon {
+                width: 70px;
+                height: 67px;
+            }
+            .pentagon::before {
+                border-left-width: 35px;
+                border-right-width: 35px;
+                border-bottom-width: 25px;
+                top: -25px;
+            }
+            .hexagon {
+                width: 70px;
+                height: 40px;
+            }
+            .hexagon::before, .hexagon::after {
+                border-left-width: 35px;
+                border-right-width: 35px;
+                border-bottom-width: 20px; /* for before */
+                border-top-width: 20px; /* for after */
+                top: -20px; /* for before */
+                bottom: -20px; /* for after */
+            }
+            .star {
+                border-right-width: 35px;
+                border-left-width: 35px;
+                border-bottom-width: 25px;
+                top: -10px;
+            }
+            .star::after {
+                border-right-width: 35px;
+                border-left-width: 35px;
+                border-top-width: 25px;
+                top: 15px;
+                left: -35px;
+            }
+            .cross {
+                width: 70px;
+                height: 70px;
+            }
+            .cross::before {
+                height: 25px;
+            }
+            .cross::after {
+                width: 25px;
+            }
+
+            .command-display {
+                font-size: 1.3em;
+                padding: 20px;
+                min-height: 120px;
+            }
+            .back-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on very small screens */
+            }
+            .card {
+                width: 110px; /* Slightly larger cards for better touch on very small screens */
+                height: 110px;
+            }
+            .shape {
+                transform: translate(-50%, -50%) scale(0.9); /* Re-adjust shape scale for slightly larger cards */
+            }
+            .command-display {
+                font-size: 1.1em;
+                min-height: 100px;
+            }
+            .back-button {
+                width: 90%; /* Make button wider */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TELEPROMPT</h1>
+
+        <div id="cardSelection" class="card-grid">
+            </div>
+
+        <div id="commandDisplay" class="command-display hidden">
+            <p id="commandText"></p>
+        </div>
+
+        <button id="backButton" class="back-button hidden">Voltar ao Início</button>
+    </div>
+
+    <script>
+        // Commands extracted from the provided documentation 
+        const commands = [
+            "Conte à pessoa ao seu lado uma memória que nunca contou à ninguém. Se não houver ninguém, fale mesmo assim. ",
+            "Caminhe de costas até a próxima obra. ",
+            "Caminhe muito devagar até a próxima obra. ",
+            "Pare o que está fazendo. Reflita sobre um momento muito feliz da sua vida e como ele se faz presente no seu cotidiano. ",
+            "Saia da exposição sem falar para ninguém, tire os sapatos, pise na grama e respire profundamente. Retorne para a exposição e continue sua visita. ",
+            "Desafie outra pessoa para uma série de 3 rodadas de \"pedra, papel, tesoura\". Caso ganhe, compartilhe com essa pessoa algo sobre você. ",
+            "Observe alguém que está na exposição, se essa pessoa perceber que está sendo observada, caminhe até ela e faça um elogio. ",
+            "Procure uma obra que te faça lembrar de sua infância. Se alguém estiver observando essa obra, conte a essa pessoa sobre sua lembrança. Ou pergunte a ela: O que essa obra te lembra? ",
+            "Convide a pessoa ao seu lado para um aperto de mão. Se ela aceitar, pergunte a ela qual é sua comida favorita. ",
+            "Assobie ou sussurre no ritmo de uma música que você gosta. ",
+            "Ande com passos fortes enquanto estiver nesta sala. ",
+            "Alongue seu pescoço, movimentando sua cabeça de maneira circular, no sentido horário, 5 vezes. ",
+            "Fale feito um pirata por tempo indeterminado. ",
+            "Diga em voz alta \"7 sóis vermelhos\" 7 vezes em entonações e tempos diferentes. Pule o mais alto que puder. ",
+            "Caminhe pelo contorno do piso retangular à sua frente. ",
+            "Acene para alguém que você nunca viu e como se conhecessem há muito tempo. ",
+            "Encontre alguém com um copo ou garrafa na mão e faça um brinde. ",
+            "Observe uma obra de um ângulo novo. Algumas sugestões: agachado, muito próximo, muito distante, por debaixo de suas pernas, através de um pequeno buraco feito com as mãos... ",
+            "Se comporte como se fosse um táxi, e busque passageiros para dar uma volta na exposição. ",
+            "Poste uma foto no Instagram com a hashtag #azedocomoaçucar. ",
+            "Ao final da exposição, compartilhe na internet sua obra favorita. ",
+            "Apenas grite seu nome. ",
+            "Ligue para um número da sua lista de contatos e descreva o lugar onde você está sem dizer que está em uma exposição de arte. ",
+            "Tire uma selfie e envie para uma pessoa aleatória da sua lista de contatos. ",
+            "Coloque a mão na cabeça e só a retire quando falar com alguém da exposição. ",
+            "Na saída, dê um presente a uma pessoa que está trabalhando nesta exposição. Ela vai inventar. Pode ser uma pedrinha que ela guarda na pochete. Uma figurinha que ela guarda na carteira. Uma fruta que por acaso trouxe na mochila. Sabe... é mais sobre o gesto de pensar sobre as pessoas que trabalham na exposição e que não são artistas. ",
+            "Abra os braços. "
+        ];
+
+        const cardContainer = document.getElementById('cardSelection');
+        const commandDisplay = document.getElementById('commandDisplay');
+        const commandText = document.getElementById('commandText');
+        const backButton = document.getElementById('backButton');
+
+        // Array de tipos de formas para randomizar
+        const shapes = ['circle', 'square', 'triangle', 'diamond', 'pentagon', 'hexagon', 'star', 'cross'];
+
+        function createCard(shapeType, index) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.index = index; // Para identificar o card, se necessário
+            
+            const shape = document.createElement('div');
+            shape.classList.add('shape', shapeType);
+            card.appendChild(shape);
+
+            card.addEventListener('click', () => {
+                displayRandomCommand();
+            });
+            return card;
+        }
+
+        function displayCards() {
+            cardContainer.innerHTML = ''; // Clear previous cards
+            commandDisplay.classList.add('hidden');
+            backButton.classList.add('hidden');
+            cardContainer.classList.remove('hidden');
+
+            // Shuffle shapes to ensure randomness for each display
+            const shuffledShapes = [...shapes].sort(() => 0.5 - Math.random());
+
+            for (let i = 0; i < 8; i++) {
+                // Use modulo to cycle through shapes if there are fewer than 8 unique shapes
+                const shapeType = shuffledShapes[i % shuffledShapes.length]; 
+                cardContainer.appendChild(createCard(shapeType, i));
+            }
+        }
+
+        function displayRandomCommand() {
+            const randomIndex = Math.floor(Math.random() * commands.length);
+            commandText.innerHTML = commands[randomIndex];
+            cardContainer.classList.add('hidden');
+            commandDisplay.classList.remove('hidden');
+            backButton.classList.remove('hidden');
+        }
+
+        // Initial display
+        displayCards();
+
+        backButton.addEventListener('click', displayCards);
+    </script>
+</body>
+</html>
