@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TELEPROMPT - Cards Interativos</title>
     <style>
+
+	@font-face{
+	font-family: 'Computer says no';
+	src: url(computer-says-no.otf.woff2);
+	}
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Computer says no;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: #f8f9fa;
+            background-color: #000000;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            color: #343a40;
+            color: #ffffff;
         }
 
         h1 {
-            color: #0056b3;
+            color: #ffffff;
             margin-bottom: 30px;
             text-align: center;
         }
@@ -29,7 +35,7 @@
             width: 100%;
             max-width: 960px;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #000000;
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -46,7 +52,7 @@
         .card {
             width: 130px;
             height: 130px;
-            background-color: #007bff;
+            background-color: #2e2e2e;
             border-radius: 15px;
             display: flex;
             align-items: center;
@@ -177,7 +183,7 @@
         .cross::before, .cross::after {
             content: '';
             position: absolute;
-            background-color: #007bff; /* Cor do fundo do card para "recortar" */
+            background-color: #2e2e2e; /* Cor do fundo do card para "recortar" */
         }
         .cross::before {
             width: 100%;
@@ -195,29 +201,29 @@
         }
 
         .command-display {
-            background-color: #e9ecef;
+            background-color: #000000;
             padding: 30px;
             border-radius: 12px;
             text-align: center;
-            font-size: 1.6em;
-            color: #495057;
+            font-size: 2em;
+            color: #ffffff;
             min-height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
             margin-top: 20px;
-            font-style: italic;
             line-height: 1.4;
         }
 
         .back-button {
             margin-top: 30px;
             padding: 14px 30px;
-            font-size: 1.2em;
-            background-color: #28a745;
+            font-size: 2em;
+            background-color: #000000;
             color: white;
             border: none;
+	    font-family: Computer says no;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
@@ -225,7 +231,7 @@
         }
 
         .back-button:hover {
-            background-color: #218838;
+            background-color: #000000;
             transform: translateY(-2px);
         }
 
@@ -236,7 +242,7 @@
         /* Responsive adjustments for smaller screens */
         @media (max-width: 768px) {
             h1 {
-                font-size: 1.8em;
+                font-size: 2em;
                 margin-bottom: 20px;
             }
             .container {
@@ -311,13 +317,13 @@
             }
 
             .command-display {
-                font-size: 1.3em;
+                font-size: 2em;
                 padding: 20px;
                 min-height: 120px;
             }
             .back-button {
                 padding: 10px 20px;
-                font-size: 1em;
+                font-size: 1.5em;
             }
         }
 
@@ -333,7 +339,7 @@
                 transform: translate(-50%, -50%) scale(0.9); /* Re-adjust shape scale for slightly larger cards */
             }
             .command-display {
-                font-size: 1.1em;
+                font-size: 1.6em;
                 min-height: 100px;
             }
             .back-button {
@@ -344,7 +350,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>TELEPROMPT</h1>
+        <h1>://< teleprompt ></h1>
 
         <div id="cardSelection" class="card-grid">
             </div>
